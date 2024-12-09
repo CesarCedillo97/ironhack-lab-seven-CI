@@ -1,0 +1,50 @@
+name: React Native CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main # Trigger on pushes to main branch
+  pull_request:
+    branches:
+      - main # Trigger on pull requests to main branch
+
+jobs:
+  build:
+    name: Build and Test React Native App
+    runs-on: ubuntu-latest # Use the latest Ubuntu environment
+
+    strategy:
+      matrix:
+        platform: [android, ios] # Run jobs for both Android and iOS platforms
+
+    steps:
+      # Objective 2: Checkout Code
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      # Objective 3: Set Up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+
+      # Objective 4: Install Dependencies
+      - name: Install dependencies
+        run: npm install --force
+
+      # Objective 5: Validate TypeScript
+      - name: TypeScript Check
+        run: npx tsc --noEmit
+
+      # Objective 6: Run Tests
+      - name: Run Unit Tests
+        run: npm test
+
+      # Build for each platform
+      - name: Build ${{ matrix.platform }}
+        run: |
+          if [ "${{ matrix.platform }}" == "android" ]; then
+            eas build -p android --profile preview
+          elif [ "${{ matrix.platform }}" == "ios" ]; then
+            eas build -p ios --profile preview
+          fi

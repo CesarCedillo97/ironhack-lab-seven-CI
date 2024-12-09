@@ -2,9 +2,10 @@
 import React from "react";
 import { View, Text, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { NavigationProps } from "./types";
 
 const HomeScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProps>();
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
